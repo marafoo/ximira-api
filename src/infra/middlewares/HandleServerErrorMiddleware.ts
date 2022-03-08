@@ -14,7 +14,7 @@ export function HandleServerErrorMiddleware(
       'There was a problem with your request, please try again later!'
     );
   }
-  const { message, name, status } = customError as CustomError;
+  const { message, status } = customError as CustomError;
   response.status((customError as CustomError).status).json({
     status,
     message,
