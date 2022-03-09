@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { sign } from 'jsonwebtoken';
 import { AuthenticateUserInterface } from '../interfaces/AuthenticateUserInterface';
-import { CreateUserIfNotExists } from './CreateUserIfNotExists';
+import { CreateUserIfNotExist } from './CreateUserIfNotExist';
 import { FindGithubUserWithAccessToken } from './FindGithubUserWithAccessToken';
 /**
  * @description Classe que autentica o usuário o github oauth retornando uma token JWT para sessão
@@ -18,7 +18,7 @@ export class GithubAuthenticateUserService
 
   private client_secret: string;
 
-  private createUserIfNotExists: CreateUserIfNotExists;
+  private createUserIfNotExist: CreateUserIfNotExist;
 
   private findGithubUserWithAccessToken: FindGithubUserWithAccessToken;
 
@@ -36,27 +36,26 @@ export class GithubAuthenticateUserService
    */
 
   async authenticate(code: string): Promise<{ token: string }> {
-    const { data: accessTokenData } =
-      await axios.post<IAccessTokenResponseData>(
-        'https://github.com/login/oauth/access_token',
-        null,
-        {
-          params: {
-            client_id: this.client_id,
-            client_secret: this.client_secret,
-            code,
-          },
-          headers: {
-            Accept: 'application/json',
-          },
-        }
-      );
-
-    const userGithub = await this.findGithubUserWithAccessToken.execute(
-      accessTokenData.access_token
+    const { data } = await axios.post<IAccessTokenResponseData>(
+      'https://github.com/login/oauth/access_token',
+      null,
+      {
+        params: {
+          client_id: this.client_id,
+          client_secret: this.client_secret,
+          code,
+        },
+        headers: {
+          Accept: 'application/json',
+        },
+      }
     );
 
-    const { name, id, avatar_url } = await this.createUserIfNotExists.execute({
+    const userGithub = await this.findGithubUserWithAccessToken.execute(
+      data.access_token
+    );
+
+    const { name, id, avatar_url } = await this.createUserIfNotExist.execute({
       name: userGithub.name,
       login: userGithub.login,
       id: userGithub.id,
