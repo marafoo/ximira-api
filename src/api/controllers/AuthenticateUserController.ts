@@ -8,14 +8,14 @@ export class AuthenticateUserController {
   async handle(request: Request, response: Response) {
     const { code } = request.body;
 
-    const serviceGihubAuth = new GithubAuthenticateUserService();
+    const serviceGithubAuth = new GithubAuthenticateUserService();
 
     try {
       if (code === undefined) {
         throw new CustomError('Param code not found', 400);
       }
 
-      const githubAccessToken = await serviceGihubAuth.authenticate(code);
+      const githubAccessToken = await serviceGithubAuth.authenticate(code);
 
       return response.json(githubAccessToken);
     } catch (error) {
