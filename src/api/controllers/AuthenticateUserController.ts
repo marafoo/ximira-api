@@ -1,21 +1,31 @@
 import { Request, Response } from 'express';
 import { AccessTokenIncorrectError } from '../../domain/errors/AccessTokenIncorrectError';
 import { CreateUserError } from '../../domain/errors/CreateUserError';
-import { GithubAuthenticateUserService } from '../../domain/services/GithubAuthenticateUserService';
+import { GithubAuthenticateUserServiceImpl } from '../../domain/services/implementations/GithubAuthenticateUserServiceImpl';
+import { FindGithubUserWithAccessTokenServiceImpl } from '../../domain/services/implementations/FindGithubUserWithAccessTokenServiceImpl';
+import { CreateUserIfNotExistServiceImpl } from '../../domain/services/implementations/CreateUserIfNotExistServiceImpl';
 import { CustomError } from '../errors/CustomError';
+import { AuthenticateUserService } from '../../domain/services/AuthenticateUserService';
 
 export class AuthenticateUserController {
+  private githubAuthenticateUserService: AuthenticateUserService;
+
   async handle(request: Request, response: Response) {
-    const { code } = request.body;
-
-    const serviceGithubAuth = new GithubAuthenticateUserService();
-
     try {
-      if (code === undefined) {
-        throw new CustomError('Param code not found', 400);
-      }
+      const { code } = request.body;
 
-      const githubAccessToken = await serviceGithubAuth.authenticate(code);
+      const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = process.env;
+
+      this.githubAuthenticateUserService =
+        new GithubAuthenticateUserServiceImpl(
+          GITHUB_CLIENT_ID,
+          GITHUB_CLIENT_SECRET,
+          new CreateUserIfNotExistServiceImpl(),
+          new FindGithubUserWithAccessTokenServiceImpl()
+        );
+
+      const githubAccessToken =
+        await this.githubAuthenticateUserService.authenticate(code);
 
       return response.json(githubAccessToken);
     } catch (error) {
@@ -42,6 +52,5 @@ export class AuthenticateUserController {
         });
       }
     }
-    return response.send();
   }
 }

@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { IUsersResponse } from '../../interfaces/IUsersResponse';
 import { AccessTokenIncorrectError } from '../../errors/AccessTokenIncorrectError';
-import { FindGithubUserWithAccessToken } from '../FindGithubUserWithAccessToken';
+import { FindUserWithAccessTokenService } from '../FindUserWithAccessTokenService';
 
-export class FindGithubUserWithAccessTokenImpl
-  implements FindGithubUserWithAccessToken
+export class FindGithubUserWithAccessTokenServiceImpl
+  implements FindUserWithAccessTokenService
 {
   async execute(accessToken: string): Promise<IUsersResponse> {
     try {

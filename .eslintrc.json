@@ -39,12 +39,8 @@
     "brace-style": "warn",
     "indent": "off",
     "operator-linebreak":"off",
-    "object-curly-newline": ["error", {
-      "ObjectExpression": "always",
-      "ObjectPattern": { "multiline": true },
-      "ImportDeclaration": "never",
-      "ExportDeclaration": { "multiline": true, "minProperties": 3 }
-    }],
+    "object-curly-newline": "off",
+    "consistent-return":"off",
     "import/extensions": [
       "error",
       "ignorePackages",

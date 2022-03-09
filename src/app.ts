@@ -13,13 +13,13 @@ const { PORT } = process.env;
 
 app.use(express.json());
 
+app.use(HandleErrorMiddleware);
+
 app.use(router);
 
 app.use(helmet());
 
 app.use(cors());
-
-app.use(HandleErrorMiddleware);
 
 app.listen(PORT, () =>
   console.log(`Server running on http://0.0.0.0:${PORT}/`)

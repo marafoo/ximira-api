@@ -3,9 +3,11 @@ import { prismaClient } from '../../../prisma';
 import { User } from '../../model/User';
 import { CreateUserError } from '../../errors/CreateUserError';
 import { IUsersResponse } from '../../interfaces/IUsersResponse';
-import { CreateUserIfNotExist } from '../CreateUserIfNotExist';
+import { CreateUserIfNotExistService } from '../CreateUserIfNotExistService';
 
-export class CreateUserIfNotExistImpl implements CreateUserIfNotExist {
+export class CreateUserIfNotExistServiceImpl
+  implements CreateUserIfNotExistService
+{
   private prismaClient: PrismaClient;
 
   constructor() {
