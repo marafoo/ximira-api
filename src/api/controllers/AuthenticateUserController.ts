@@ -2,17 +2,22 @@ import { Request, Response } from 'express';
 import { AccessTokenIncorrectError } from '../../domain/errors/AccessTokenIncorrectError';
 import { CreateUserError } from '../../domain/errors/CreateUserError';
 import { GithubAuthenticateUserService } from '../../domain/services/GithubAuthenticateUserService';
+import { CustomError } from '../errors/CustomError';
 
 export class AuthenticateUserController {
   async handle(request: Request, response: Response) {
     const { code } = request.body;
 
-    const service = new GithubAuthenticateUserService();
+    const serviceGihubAuth = new GithubAuthenticateUserService();
 
     try {
-      const accessToken = await service.authenticate(code);
+      if (code === undefined) {
+        throw new CustomError('Param code not found', 400);
+      }
 
-      return response.json(accessToken);
+      const githubAccessToken = await serviceGihubAuth.authenticate(code);
+
+      return response.json(githubAccessToken);
     } catch (error) {
       if (error instanceof AccessTokenIncorrectError) {
         const { message } = error;
@@ -29,6 +34,14 @@ export class AuthenticateUserController {
           message,
         });
       }
+
+      if (error instanceof CustomError) {
+        const { message, status } = error;
+        return response.status(status).json({
+          message,
+        });
+      }
     }
+    return response.send();
   }
 }
