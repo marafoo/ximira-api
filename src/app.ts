@@ -4,8 +4,8 @@ import 'express-async-errors';
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import { router } from './infra/routes';
-import { HandleServerErrorMiddleware } from './infra/middlewares/HandleServerErrorMiddleware';
+import { router } from './api/routes';
+import { HandleErrorMiddleware } from './api/middlewares/HandleErrorMiddleware';
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.use(helmet());
 
 app.use(cors());
 
-app.use(HandleServerErrorMiddleware);
+app.use(HandleErrorMiddleware);
 
 app.listen(PORT, () =>
   console.log(`Server running on http://0.0.0.0:${PORT}/`)

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { CustomError } from '../errors/CustomError';
 
-export function HandleServerErrorMiddleware(
+export function HandleErrorMiddleware(
   error: TypeError | CustomError,
   request: Request,
   response: Response,
