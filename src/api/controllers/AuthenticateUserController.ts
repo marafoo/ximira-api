@@ -5,18 +5,15 @@ import { GithubAuthenticateUserServiceImpl } from '../../domain/services/impleme
 import { FindGithubUserWithAccessTokenServiceImpl } from '../../domain/services/implementations/FindGithubUserWithAccessTokenServiceImpl';
 import { CreateUserIfNotExistServiceImpl } from '../../domain/services/implementations/CreateUserIfNotExistServiceImpl';
 import { CustomError } from '../errors/CustomError';
-import { AuthenticateUserService } from '../../domain/services/AuthenticateUserService';
 
 export class AuthenticateUserController {
-  private githubAuthenticateUserService: AuthenticateUserService;
-
-  async handle(request: Request, response: Response) {
+  public static async handle(request: Request, response: Response) {
     try {
       const { code } = request.body;
 
       const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = process.env;
 
-      this.githubAuthenticateUserService =
+      const githubAuthenticateUserService =
         new GithubAuthenticateUserServiceImpl(
           GITHUB_CLIENT_ID,
           GITHUB_CLIENT_SECRET,
@@ -25,7 +22,7 @@ export class AuthenticateUserController {
         );
 
       const githubAccessToken =
-        await this.githubAuthenticateUserService.authenticate(code);
+        await githubAuthenticateUserService.authenticate(code);
 
       return response.json(githubAccessToken);
     } catch (error) {
