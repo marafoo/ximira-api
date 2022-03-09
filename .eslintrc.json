@@ -35,9 +35,10 @@
     "class-methods-use-this":"off",
     "import/prefer-default-export": "off",
     "no-unused-vars": "warn",
-    "camelcase": "warn",
+    "camelcase": "off",
     "brace-style": "warn",
     "indent": "off",
+    "operator-linebreak":"off",
     "object-curly-newline": ["error", {
       "ObjectExpression": "always",
       "ObjectPattern": { "multiline": true },
